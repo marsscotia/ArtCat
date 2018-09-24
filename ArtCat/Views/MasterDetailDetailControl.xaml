@@ -1,0 +1,201 @@
+﻿<UserControl
+    x:Class="ArtCat.Views.MasterDetailDetailControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d"
+    d:DesignHeight="900"
+    d:DesignWidth="900"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:dd="using:ArtCat.Services.DragAndDrop">
+    <ScrollViewer Name="ForegroundElement" VerticalScrollMode="Enabled" HorizontalAlignment="Stretch" Padding="12,0"
+                  HorizontalContentAlignment="Stretch">
+        <RelativePanel x:Name="ContainerPanel">
+            <RelativePanel x:Name="TopPanel"
+                           RelativePanel.AlignTopWithPanel="True"
+                           RelativePanel.AlignRightWithPanel="True"
+                           RelativePanel.AlignLeftWithPanel="True">
+                <GridView x:Name="ImagesList"
+                          RelativePanel.AlignTopWithPanel="True"
+                          RelativePanel.AlignLeftWithPanel="True"
+                          RelativePanel.AlignRightWithPanel="True"
+                          ItemsSource="{x:Bind MasterMenuItem.ImagePaths, Mode=OneWay}"
+                          SelectionMode="None"
+                          IsItemClickEnabled="False"
+                          ScrollViewer.HorizontalScrollMode="Enabled"
+                          ScrollViewer.VerticalScrollMode="Disabled"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          ItemTemplate="{StaticResource ImageWrapItemTemplate}"
+                          Visibility="{x:Bind MasterMenuItem.IsImagesEmpty, Mode=OneWay, Converter={StaticResource InverseBoolToVisibleConverter}}"
+                          >
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsWrapGrid Orientation="Vertical"
+                                           MaximumRowsOrColumns="1" />
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
+                
+                <Border x:Name="ImageDropTarget"
+                        RelativePanel.AlignTopWithPanel="True"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignRightWithPanel="True"
+                        Height="160"
+                        BorderBrush="LightGray"
+                        BorderThickness="8"
+                        CornerRadius="4"
+                        Visibility="{x:Bind MasterMenuItem.IsImagesEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibleConverter}}"
+                        
+                        >
+                    
+                    <Grid AllowDrop="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <dd:DragDropService.Configuration>
+                            <dd:DropConfiguration DropStorageItemsCommand="{x:Bind MasterMenuItem.GetStorageItemsCommand, Mode=OneWay}"/>
+                        </dd:DragDropService.Configuration>
+                        <StackPanel Orientation="Vertical"
+                                    Grid.Column="1"
+                                    Grid.Row="1" >
+                        <SymbolIcon
+                            Symbol="Add"
+                            Foreground="LightGray"/>
+                        <TextBlock x:Uid="DropImageHere"
+                                   Foreground="LightGray"
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   HorizontalTextAlignment="Center"
+                                   TextWrapping="WrapWholeWords"/>
+                        </StackPanel>
+                    </Grid>
+
+                </Border>
+            </RelativePanel>
+
+            <Button x:Name="AddImagesButton"
+                    RelativePanel.Below="TopPanel"
+                    RelativePanel.AlignRightWithPanel="True"
+                    Margin="0, 8, 0, 0"
+                    Width="60"
+                    Height="60"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Command="{x:Bind MasterMenuItem.GetPickedFilesCommand, Mode=OneWay}">
+                <StackPanel Orientation="Vertical">
+                    <SymbolIcon Symbol="Add" />
+                    <TextBlock x:Uid="AddTextBlock" />
+                </StackPanel>
+            </Button>
+
+            <!-- Name Text Box: Name of the piece -->
+            <TextBox x:Name="NameTextBox"
+                     x:Uid="Name"
+                     RelativePanel.Below="TopPanel"
+                     RelativePanel.AlignLeftWithPanel="True"
+                     Margin="0, 16, 0, 0"
+                     Width="300"
+                     Text="{x:Bind MasterMenuItem.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+            <!-- Medium Text Box: The medium in which the piece was created -->
+            <AutoSuggestBox x:Name="MediumTextBox"
+                            QueryIcon="Accept"
+                     x:Uid="Medium"
+                     RelativePanel.Below="NameTextBox"
+                     RelativePanel.AlignLeftWithPanel="True"
+                     RelativePanel.AlignRightWith="NameTextBox"
+                     Margin="0, 16, 0, 0"
+                            ItemsSource="{x:Bind MasterMenuItem.MediaSuggestions, Mode=OneWay}"
+                     Text="{x:Bind MasterMenuItem.Medium, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            TextChanged="{x:Bind MasterMenuItem.UpdateMediaSuggestions}"/>
+
+            <!-- Width Text Box: Width of the piece -->
+            <TextBox x:Name="WidthTextBox"
+                     x:Uid="Width"
+                     RelativePanel.Below="MediumTextBox"
+                     RelativePanel.AlignLeftWithPanel="True"
+                     Margin="0, 16, 0, 0"
+                     RelativePanel.AlignRightWith="NameTextBox"
+                     InputScope="Number"
+                     Text="{x:Bind MasterMenuItem.Width, Mode=TwoWay, Converter={StaticResource StringToDoubleConverter}, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock x:Name="WidthInTextBlock"
+                       RelativePanel.RightOf="WidthTextBox"
+                       RelativePanel.AlignBottomWith="WidthTextBox"
+                       Margin="8, 0, 0, 0"
+                       Text="{x:Bind MasterMenuItem.WidthIn, Mode=OneWay}" />
+
+            <!-- Height Text Box: Height of the piece -->
+            <TextBox x:Name="HeightTextBox"
+                     x:Uid="Height"
+                     RelativePanel.Below="WidthTextBox"
+                     RelativePanel.AlignLeftWithPanel="True"
+                     Margin="0, 16, 0, 0"
+                     RelativePanel.AlignRightWith="NameTextBox"
+                     InputScope="Number"
+                     Text="{x:Bind MasterMenuItem.Height, Mode=TwoWay, Converter={StaticResource StringToDoubleConverter}, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock x:Name="HeightInTextBlock"
+                       RelativePanel.RightOf="HeightTextBox"
+                       RelativePanel.AlignBottomWith="HeightTextBox"
+                       Margin="8, 0, 0, 0"
+                       Text="{x:Bind MasterMenuItem.HeightIn, Mode=OneWay}" />
+
+            <!-- Date Completed Date Picker: When the piece was completed -->
+            <CalendarDatePicker x:Name="DateCompletedDatePicker"
+                        x:Uid="DateCompleted"
+                        RelativePanel.Below="HeightTextBox"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignRightWith="NameTextBox"
+                        Margin="0, 16, 0, 0"
+                        Date="{x:Bind MasterMenuItem.DateCompleted, Mode=TwoWay}"/>
+
+            <!-- Date Offered Date Picker: When the piece was originally posted for sale -->
+            <CalendarDatePicker x:Name="DateOfferedDatePicker"
+                        x:Uid="DateOffered"
+                        RelativePanel.Below="DateCompletedDatePicker"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignRightWith="NameTextBox"
+                        Margin="0, 16, 0, 0"
+                        Date="{x:Bind MasterMenuItem.DateOfferedForSale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+            <!-- Price Offered Text Box: What price the piece was offered for sale for -->
+            <TextBox x:Name="PriceOfferedTextBox"
+                     x:Uid="PriceOffered"
+                     RelativePanel.Below="DateOfferedDatePicker"
+                     RelativePanel.AlignLeftWithPanel="True"
+                     RelativePanel.AlignRightWith="NameTextBox"
+                     Margin="0, 16, 0, 0"
+                     InputScope="CurrencyAmount"
+                     Text="{x:Bind MasterMenuItem.PriceOffered, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToDoubleConverter}}" />
+
+            <!-- Date Sold Date Picker: When the piece sold -->
+            <CalendarDatePicker x:Name="DateSoldDatePicker"
+                        x:Uid="DateSold"
+                        RelativePanel.Below="PriceOfferedTextBox"
+                        RelativePanel.AlignLeftWithPanel="True"
+                        RelativePanel.AlignRightWith="NameTextBox"
+                        Margin="0, 16, 0, 0"
+                        Date="{x:Bind MasterMenuItem.DateSold, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+            <!-- Price Sold Text Box: The price for which the piece sold -->
+            <TextBox x:Name="PriceSoldTextBox"
+                     x:Uid="PriceSold"
+                     RelativePanel.Below="DateSoldDatePicker"
+                     RelativePanel.AlignLeftWithPanel="True"
+                     RelativePanel.AlignRightWith="NameTextBox"
+                     Margin="0, 16, 0, 16"
+                     Text="{x:Bind MasterMenuItem.PriceSold, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToDoubleConverter}}"
+                     InputScope="CurrencyAmount" />
+
+        </RelativePanel>
+    </ScrollViewer>
+</UserControl>

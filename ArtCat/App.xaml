@@ -1,0 +1,39 @@
+﻿<Application
+    x:Class="ArtCat.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:helpers="using:ArtCat.Helpers"
+    xmlns:controls="using:ArtCat.Controls"
+    >
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/_Colors.xaml"/>
+                <ResourceDictionary Source="/Styles/_FontSizes.xaml"/>
+                <ResourceDictionary Source="/Styles/_Thickness.xaml"/>
+                <ResourceDictionary Source="/Styles/TextBlock.xaml"/>
+                <ResourceDictionary Source="/Styles/Page.xaml"/>
+                <ResourceDictionary Source="/Styles/TemplateDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:BoolToObjectConverter x:Key="BoolToVisibleConverter" TrueValue="Visible" FalseValue="Collapsed" />
+            <converters:BoolToObjectConverter x:Key="InverseBoolToVisibleConverter" TrueValue="Collapsed" FalseValue="Visible" />
+            <helpers:PathToBitmapImageConverter x:Key="PathToImageConverter" />
+            <helpers:BoolToSelectionConverter x:Key="BoolToSelectionConverter" />
+            <helpers:IntStringConverter x:Key="StringToDoubleConverter" />
+
+            <Style TargetType="controls:AppBarLiteral">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="controls:AppBarLiteral">
+                            <ContentPresenter Content="{TemplateBinding LiteralContent}" />
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

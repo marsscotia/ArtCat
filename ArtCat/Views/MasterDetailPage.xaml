@@ -1,0 +1,112 @@
+﻿<Page
+    x:Class="ArtCat.Views.MasterDetailPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Style="{StaticResource PageStyle}"
+    Background="Red"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:customcontrols="using:ArtCat.Controls"
+    xmlns:model="using:ArtCat.Models"
+    xmlns:viewmodels="using:ArtCat.ViewModels"
+    xmlns:views="using:ArtCat.Views"
+    xmlns:ic="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    mc:Ignorable="d">
+    <Page.Transitions>
+        <TransitionCollection>
+            <NavigationThemeTransition />
+        </TransitionCollection>
+    </Page.Transitions>
+
+    <Page.Resources>
+        <DataTemplate x:Key="ItemTemplate" x:DataType="viewmodels:PieceViewModel">
+            <Grid Padding="0,8"
+                      x:Name="ItemContentGrid">
+                <i:Interaction.Behaviors>
+                    <ic:EventTriggerBehavior EventName="PointerEntered" SourceObject="{Binding ElementName=ItemContentGrid}">
+                        <ic:ChangePropertyAction PropertyName="Visibility"
+                                                     TargetObject="{Binding ElementName=DeletePieceButton}" Value="Visible" />
+                    </ic:EventTriggerBehavior>
+                    <ic:EventTriggerBehavior EventName="PointerExited" SourceObject="{Binding ElementName=ItemContentGrid}">
+                        <ic:ChangePropertyAction PropertyName="Visibility"
+                                                     TargetObject="{Binding ElementName=DeletePieceButton}" Value="Collapsed" />
+                    </ic:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="56"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" VerticalAlignment="Center"
+                       Visibility="{x:Bind IsImagesEmpty, Mode=OneWay, Converter={StaticResource InverseBoolToVisibleConverter}}"
+                       Source="{x:Bind ThumbnailPath, Mode=OneWay, Converter={StaticResource PathToImageConverter}}"
+                          
+                       />
+                <FontIcon Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Height="56"
+                            Width="56"
+                            Visibility="{x:Bind IsImagesEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibleConverter}}"
+                            FontFamily="Segoe MDL2 Assets" Glyph="&#xE790;" />
+
+                <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" Orientation="Vertical">
+                    <TextBlock Text="{x:Bind Name, Mode=TwoWay}" Style="{ThemeResource ListTitleStyle}"/>
+                    <TextBlock Text="{x:Bind DisplayDimensions, Mode=OneWay}" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                    <TextBlock Text="{x:Bind Medium, Mode=OneWay}" Style="{ThemeResource CaptionTextBlockStyle}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical"
+                            VerticalAlignment="Bottom"
+                            Grid.Column="2">
+                    <Button x:Name="DeletePieceButton"
+                            Visibility="Collapsed"
+                                Command="{Binding DataContext.DeletePieceCommand, ElementName=ContentArea}"
+                                CommandParameter="{Binding}">
+
+                        <SymbolIcon Symbol="Delete" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid x:Name="ContentArea">
+        <controls:MasterDetailsView
+            x:Name="MasterDetailsViewControl"
+            ItemsSource="{x:Bind ViewModel.Pieces}"
+            SelectedItem="{x:Bind ViewModel.Selected, Mode=TwoWay}"
+            ItemTemplate="{StaticResource ItemTemplate}"
+            DetailsTemplate="{StaticResource DetailsTemplate}"
+            NoSelectionContentTemplate="{StaticResource NoSelectionContentTemplate}"
+            BorderBrush="Transparent" >
+            <controls:MasterDetailsView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </controls:MasterDetailsView.ItemContainerStyle>
+            <controls:MasterDetailsView.MasterCommandBar>
+                <CommandBar x:Name="MasterDetailCommandBar"
+                            IsDynamicOverflowEnabled="False">
+                    <customcontrols:AppBarLiteral>
+                        <AutoSuggestBox Text="{x:Bind ViewModel.SearchTerm, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        x:Uid="PieceSearch"
+                                        QueryIcon="Find"
+                                        Width="180"
+                                        Margin="0, 8, 0, 0"
+                                        ItemsSource="{x:Bind ViewModel.SearchSuggestions, Mode=OneWay}"
+                                        TextChanged="{x:Bind ViewModel.UpdateSearchSuggestions}"
+                                        QuerySubmitted="{x:Bind ViewModel.FilterPieces}"/>
+                    </customcontrols:AppBarLiteral>
+                    <AppBarButton x:Name="AddButton"
+                              Icon="Add"
+                              x:Uid="Add"
+                              Click="{x:Bind ViewModel.AddPiece}"
+                              />
+                </CommandBar>
+            </controls:MasterDetailsView.MasterCommandBar>
+        </controls:MasterDetailsView>
+        
+    </Grid>
+</Page>
