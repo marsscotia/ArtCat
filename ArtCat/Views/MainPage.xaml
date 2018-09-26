@@ -4,15 +4,115 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="using:ArtCat.ViewModels"
     Style="{StaticResource PageStyle}"
     mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="SoldItemTemplate" x:DataType="viewmodels:PieceViewModel">
+            
+        </DataTemplate>
+    </Page.Resources>
     <Grid
         x:Name="ContentArea"
         Margin="{StaticResource MediumLeftRightMargin}">
-        <Grid
-            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
+        <RelativePanel
+            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+            Padding="16">
             <!--The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
                 Place your content here.-->
-        </Grid>
+
+            <TextBlock x:Name="DescriptionTextBlock"
+                       x:Uid="SalesDescription"
+                       Style="{ThemeResource BodyTextBlockStyle}"
+                       TextWrapping="WrapWholeWords"/>
+
+            <CalendarDatePicker x:Name="StartDatePicker"
+                        x:Uid="StartDate"
+                        Margin="0, 16, 0, 0"
+                        Date="{x:Bind ViewModel.StartDate, Mode=TwoWay}"
+                        RelativePanel.Below="DescriptionTextBlock"/>
+
+            <CalendarDatePicker x:Name="EndDatePicker"
+                        x:Uid="EndDate"
+                        RelativePanel.Below="StartDatePicker"
+                        Margin="0, 16, 0, 0"
+                        Date="{x:Bind ViewModel.EndDate, Mode=TwoWay}"/>
+
+            <TextBlock x:Name="NoSoldPiecesTextBlock"
+                       x:Uid="NoSoldPieces"
+                       RelativePanel.Below="EndDatePicker"
+                       RelativePanel.AlignLeftWith="EndDatePicker"
+                       RelativePanel.AlignRightWith="EndDatePicker"
+                       Margin="0, 16, 0, 0"
+                       Visibility="{x:Bind ViewModel.IsPiecesEmpty, Converter={StaticResource BoolToVisibleConverter}, Mode=OneWay}"
+                       Style="{ThemeResource BodyTextBlockStyle}"
+                       TextWrapping="WrapWholeWords"
+                       TextAlignment="Center"/>
+
+            <ListView x:Name="SoldPiecesListView"
+                      RelativePanel.Below="EndDatePicker"
+                      RelativePanel.AlignBottomWithPanel="True"
+                      Width="302"
+                      Margin="0, 16, 0, 0"
+                      Visibility="{x:Bind ViewModel.IsPiecesNotEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibleConverter}}"
+                      ItemsSource="{x:Bind ViewModel.Pieces}"
+                      ItemTemplate="{StaticResource SoldItemTemplate}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+
+            <Grid x:Name="StatsGrid"
+                  RelativePanel.Below="EndDatePicker"
+                  RelativePanel.RightOf="SoldPiecesListView"
+                  Margin="16, 16, 0, 0"
+                  Visibility="{x:Bind ViewModel.IsPiecesEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibleConverter}}"
+                  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock x:Uid="NumberSold"
+                           Grid.Column="0"
+                           Grid.Row="0" />
+                <TextBlock x:Uid="MaxPrice"
+                           Grid.Column="0"
+                           Grid.Row="1" />
+                <TextBlock x:Uid="MinPrice"
+                           Grid.Column="0"
+                           Grid.Row="2" />
+                <TextBlock x:Uid="AvgPrice"
+                           Grid.Column="0"
+                           Grid.Row="3" />
+                <TextBlock x:Uid="TotalPrice"
+                           Grid.Column="0"
+                           Grid.Row="4" />
+                <TextBlock Text="{x:Bind ViewModel.NumberPiecesSold, Mode=OneWay}"
+                           Grid.Column="1"
+                           Grid.Row="0" />
+                <TextBlock Text="{x:Bind ViewModel.MaxPrice, Mode=OneWay}"
+                           Grid.Column="1"
+                           Grid.Row="1" />
+                <TextBlock Text="{x:Bind ViewModel.MinPrice, Mode=OneWay}"
+                           Grid.Column="1"
+                           Grid.Row="2" />
+                <TextBlock Text="{x:Bind ViewModel.AvgPrice, Mode=OneWay}"
+                           Grid.Column="1"
+                           Grid.Row="3" />
+                <TextBlock Text="{x:Bind ViewModel.TotalPrice, Mode=OneWay}"
+                           Grid.Column="0"
+                           Grid.Row="4" />
+            </Grid>
+            
+        </RelativePanel>
     </Grid>
 </Page>

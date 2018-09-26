@@ -13,6 +13,12 @@ namespace ArtCat.Views
         public MainPage()
         {
             InitializeComponent();
+            Loaded += MainPage_Loaded;
+        }
+
+        private void MainPage_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ViewModel.LoadData();
         }
     }
 }
