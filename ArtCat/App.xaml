@@ -23,6 +23,8 @@
             <helpers:PathToBitmapImageConverter x:Key="PathToImageConverter" />
             <helpers:BoolToSelectionConverter x:Key="BoolToSelectionConverter" />
             <helpers:IntStringConverter x:Key="StringToDoubleConverter" />
+            <x:Double x:Key="NarrowWindowWidth">720</x:Double>
+            <x:Double x:Key="NarrowListWidth">320</x:Double>
 
             <Style TargetType="controls:AppBarLiteral">
                 <Setter Property="Template">
@@ -32,6 +34,11 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
+            </Style>
+
+            <Style x:Key="DataGridLabelStyle" TargetType="TextBlock" BasedOn="{StaticResource BaseTextBlockStyle}">
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Margin" Value="0, 0, 8, 8" />
             </Style>
 
         </ResourceDictionary>

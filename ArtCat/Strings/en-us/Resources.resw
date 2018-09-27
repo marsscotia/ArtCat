@@ -249,4 +249,31 @@
   <data name="PieceSearch.PlaceholderText" xml:space="preserve">
     <value>Search for a piece</value>
   </data>
+  <data name="EndDate.Header" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="SalesDescription.Text" xml:space="preserve">
+    <value>Choose a start and end date to view the sales between those dates.</value>
+  </data>
+  <data name="StartDate.Header" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="AvgPrice.Text" xml:space="preserve">
+    <value>Average price:</value>
+  </data>
+  <data name="MaxPrice.Text" xml:space="preserve">
+    <value>Highest price:</value>
+  </data>
+  <data name="MinPrice.Text" xml:space="preserve">
+    <value>Lowest price:</value>
+  </data>
+  <data name="NoSoldPieces.Text" xml:space="preserve">
+    <value>There aren't any sold pieces to display.</value>
+  </data>
+  <data name="NumberSold.Text" xml:space="preserve">
+    <value>Number of pieces sold:</value>
+  </data>
+  <data name="TotalPrice.Text" xml:space="preserve">
+    <value>Total price:</value>
+  </data>
 </root>

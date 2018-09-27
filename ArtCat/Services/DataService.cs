@@ -117,6 +117,25 @@ namespace ArtCat.Services
             return results;
         }
 
+        public static List<Piece> FindSoldPieces(DateTimeOffset? aStartDate, DateTimeOffset? anEndDate)
+        {
+            List<Piece> results = new List<Piece>();
+            if (_piecesCollection != null)
+            {
+                foreach (var piece in _piecesCollection.All)
+                {
+                    if (piece.DateSold != null)
+                    {
+                        if (piece.DateSold >= aStartDate && piece.DateSold <= anEndDate)
+                        {
+                            results.Add(piece);
+                        }
+                    }
+                }
+            }
+            return results;
+        }
+
         /// <summary>
         /// Retrieves a set of unique names of pieces.
         /// </summary>
