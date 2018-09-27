@@ -261,6 +261,20 @@ namespace ArtCat.ViewModels
             }
         }
 
+        public string DisplaySoldInfo
+        {
+            get
+            {
+                string result = "";
+                if (DateSold != null && PriceSold != null)
+                {
+                    result = string.Format("Sold on {0:D} for {1:C}", DateSold, PriceSold); 
+                }
+                return result;
+            }
+        }
+
+
         public string ThumbnailPath
         {
             get

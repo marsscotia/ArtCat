@@ -64,7 +64,7 @@ namespace ArtCat.ViewModels
                     double? min = Pieces.Min(piece => piece.PriceSold);
                     if (min != null)
                     {
-                        result = string.Format("{0:#.##}", min);
+                        result = string.Format("{0:C}", min);
                     }
                 }
                 return result;
@@ -81,7 +81,7 @@ namespace ArtCat.ViewModels
                     double? max = Pieces.Max(piece => piece.PriceSold);
                     if (max != null)
                     {
-                        result = string.Format("{0:#.##}", max);
+                        result = string.Format("{0:C}", max);
                     }
                 }
                 return result;
@@ -98,7 +98,7 @@ namespace ArtCat.ViewModels
                     double? avg = Pieces.Average(piece => piece.PriceSold);
                     if (avg != null)
                     {
-                        result = string.Format("{0:#.##}", avg);
+                        result = string.Format("{0:C}", avg);
                     }
                 }
                 return result;
@@ -115,7 +115,7 @@ namespace ArtCat.ViewModels
                     double? sum = Pieces.Sum(piece => piece.PriceSold);
                     if (sum != null)
                     {
-                        result = string.Format("{0:#.##}", sum);
+                        result = string.Format("{0:C}", sum);
                     }
                 }
                 return result;

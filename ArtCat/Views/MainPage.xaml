@@ -9,12 +9,64 @@
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="SoldItemTemplate" x:DataType="viewmodels:PieceViewModel">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="56" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Visibility="{x:Bind IsImagesEmpty, Mode=OneWay, Converter={StaticResource InverseBoolToVisibleConverter}}"
+                       Source="{x:Bind ThumbnailPath, Mode=OneWay, Converter={StaticResource PathToImageConverter}}"/>
+                <FontIcon Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Height="56"
+                            Width="56"
+                            Visibility="{x:Bind IsImagesEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibleConverter}}"
+                            FontFamily="Segoe MDL2 Assets" Glyph="&#xE790;" />
+                <StackPanel Orientation="Vertical"
+                            Grid.Column="1"
+                            Margin="12, 0, 0, 0"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="{x:Bind Name, Mode=OneWay }"
+                               Style="{ThemeResource ListTitleStyle}"/>
+                    <TextBlock Text="{x:Bind DisplaySoldInfo, Mode=OneWay}"
+                               Style="{ThemeResource CaptionTextBlockStyle}"
+                               TextWrapping="WrapWholeWords" />
+                </StackPanel>
+            </Grid>
+
             
         </DataTemplate>
     </Page.Resources>
+    
     <Grid
         x:Name="ContentArea"
         Margin="{StaticResource MediumLeftRightMargin}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="WindowWidthStateGroups">
+                <VisualState x:Name="NarrowWidthState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="StatsGrid.(RelativePanel.AlignLeftWithPanel)" Value="True" />
+                        <Setter Target="SoldPiecesListView.(RelativePanel.Below)" Value="StatsGrid" />
+                        <Setter Target="SoldPiecesListView.(RelativePanel.AlignRightWithPanel)" Value="True" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="WideWidthState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource NarrowWindowWidth}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="StatsGrid.(RelativePanel.RightOf)" Value="SoldPiecesListView" />
+                        <Setter Target="SoldPiecesListView.(RelativePanel.Below)" Value="EndDatePicker" />
+                        <Setter Target="SoldPiecesListView.Width" Value="{StaticResource NarrowListWidth}" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <RelativePanel
             Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
             Padding="16">
@@ -50,10 +102,9 @@
                        TextAlignment="Center"/>
 
             <ListView x:Name="SoldPiecesListView"
-                      RelativePanel.Below="EndDatePicker"
                       RelativePanel.AlignBottomWithPanel="True"
-                      Width="302"
-                      Margin="0, 16, 0, 0"
+                      RelativePanel.AlignLeftWithPanel="True"
+                      Margin="0, 16, 16, 0"
                       Visibility="{x:Bind ViewModel.IsPiecesNotEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibleConverter}}"
                       ItemsSource="{x:Bind ViewModel.Pieces}"
                       ItemTemplate="{StaticResource SoldItemTemplate}">
@@ -65,37 +116,41 @@
             </ListView>
 
             <Grid x:Name="StatsGrid"
+                  Margin="0, 16, 0, 0"
                   RelativePanel.Below="EndDatePicker"
-                  RelativePanel.RightOf="SoldPiecesListView"
-                  Margin="16, 16, 0, 0"
-                  Visibility="{x:Bind ViewModel.IsPiecesEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibleConverter}}"
+                  Visibility="{x:Bind ViewModel.IsPiecesNotEmpty, Mode=OneWay, Converter={StaticResource BoolToVisibleConverter}}"
                   >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock x:Uid="NumberSold"
                            Grid.Column="0"
-                           Grid.Row="0" />
+                           Grid.Row="0"
+                           Style="{StaticResource DataGridLabelStyle}"/>
                 <TextBlock x:Uid="MaxPrice"
                            Grid.Column="0"
-                           Grid.Row="1" />
+                           Grid.Row="1"
+                           Style="{StaticResource DataGridLabelStyle}"/>
                 <TextBlock x:Uid="MinPrice"
                            Grid.Column="0"
-                           Grid.Row="2" />
+                           Grid.Row="2"
+                           Style="{StaticResource DataGridLabelStyle}"/>
                 <TextBlock x:Uid="AvgPrice"
                            Grid.Column="0"
-                           Grid.Row="3" />
+                           Grid.Row="3"
+                           Style="{StaticResource DataGridLabelStyle}"/>
                 <TextBlock x:Uid="TotalPrice"
                            Grid.Column="0"
-                           Grid.Row="4" />
+                           Grid.Row="4"
+                           Style="{StaticResource DataGridLabelStyle}"/>
                 <TextBlock Text="{x:Bind ViewModel.NumberPiecesSold, Mode=OneWay}"
                            Grid.Column="1"
                            Grid.Row="0" />
@@ -109,7 +164,7 @@
                            Grid.Column="1"
                            Grid.Row="3" />
                 <TextBlock Text="{x:Bind ViewModel.TotalPrice, Mode=OneWay}"
-                           Grid.Column="0"
+                           Grid.Column="1"
                            Grid.Row="4" />
             </Grid>
             
