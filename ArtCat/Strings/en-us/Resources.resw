@@ -276,4 +276,7 @@
   <data name="TotalPrice.Text" xml:space="preserve">
     <value>Total price:</value>
   </data>
+  <data name="ContextMenuDelete.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
 </root>

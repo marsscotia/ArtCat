@@ -24,6 +24,13 @@
         <DataTemplate x:Key="ItemTemplate" x:DataType="viewmodels:PieceViewModel">
             <Grid Padding="0,8"
                       x:Name="ItemContentGrid">
+                <Grid.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem x:Uid="ContextMenuDelete"
+                                        Command="{Binding DataContext.DeletePieceCommand, ElementName=ContentArea}"
+                                        CommandParameter="{Binding}" />
+                    </MenuFlyout>
+                </Grid.ContextFlyout>
                 <i:Interaction.Behaviors>
                     <ic:EventTriggerBehavior EventName="PointerEntered" SourceObject="{Binding ElementName=ItemContentGrid}">
                         <ic:ChangePropertyAction PropertyName="Visibility"

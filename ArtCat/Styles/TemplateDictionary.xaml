@@ -12,6 +12,13 @@
 
         <RelativePanel Background="Red"
                                x:Name="GridItem">
+            <RelativePanel.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem x:Uid="ContextMenuDelete"
+                                    Command="{Binding DataContext.DeleteImageCommand, ElementName=ContainerPanel}"
+                                    CommandParameter="{Binding}" />
+                </MenuFlyout>
+            </RelativePanel.ContextFlyout>
             <i:Interaction.Behaviors>
                 <ic:EventTriggerBehavior EventName="PointerEntered">
                     <ic:ChangePropertyAction PropertyName="Visibility"
